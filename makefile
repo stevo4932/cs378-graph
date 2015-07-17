@@ -1,37 +1,34 @@
-ifeq ($(shell uname), Darwin)
-    CXX       := g++
-    CXXVER    := --version 2>&1 | grep c++
-    GTESTVER  := head -1 /usr/local/src/gtest-1.7.0/CHANGES
-    GCOV      := gcov
-    GCOVFLAGS := -fprofile-arcs -ftest-coverage
-    GCOVVER   := -version | grep version
-    BOOST     := /usr/local/src/boost_1_57_0/boost
-    LDFLAGS   := -lgtest_main
-    VALGRIND  :=
-else ifeq ($(CXX), clang++)
-    CXXVER    := --version 2>&1 | grep clang
-    GTESTVER  := dpkg -l libgtest-dev | grep libgtest
-    GCOV      := gcov-4.6
-    GCOVFLAGS := --coverage
-    GCOVVER   := -v | grep gcov
-    BOOST     := /usr/include/boost
-    LDFLAGS   := -lgtest -lgtest_main -pthread
-    VALGRIND  := valgrind
+FILES :=                              \
+    .gitignore                        \
+    .travis.yml                       \
+    Graph-tests/sts768-TestGraph.c++ \
+    Graph-tests/sts768-TestGraph.out \
+    Graph.h                         \
+    Graph.log                       \
+    html                            \
+    TestGraph.c++                   \
+    TestGraph.out
+
+ifeq ($(CXX), clang++)
+    COVFLAGS := --coverage
+    GCOV     := gcov-4.6
 else
-    CXX       := g++-4.8
-    CXXVER    := --version 2>&1 | grep g++
-    GTESTVER  := dpkg -l libgtest-dev | grep libgtest
-    GCOV      := gcov-4.8
-    GCOVFLAGS := -fprofile-arcs -ftest-coverage
-    GCOVVER   := -v | grep gcov
-    BOOST     := /usr/include/boost
-    LDFLAGS   := -lgtest -lgtest_main -pthread
-    VALGRIND  := valgrind
+    CXX      := g++-4.8
+    COVFLAGS := -fprofile-arcs -ftest-coverage
+    GCOV     := gcov-4.8
 endif
 
 CXXFLAGS := -pedantic -std=c++11 -Wall
+LDFLAGS  := -lgtest -lgtest_main -pthread
+VALGRIND := valgrind
 
-.PRECIOUS: %.app
+all: TestGraph
+
+check:
+	@for i in $(FILES);                                         \
+	do                                                          \
+        [ -e $$i ] && echo "$$i found" || echo "$$i NOT FOUND"; \
+    done
 
 clean:
 	rm -f *.gcda
@@ -40,49 +37,31 @@ clean:
 	rm -f TestGraph
 	rm -f TestGraph.out
 
-sync:
-	make clean
-	@echo `pwd`
-	@rsync -r -t -u -v --delete \
-    --include "Graph.h"         \
-    --include "makefile"        \
-    --include "TestGraph.c++"   \
-    --exclude "*"               \
-    . downing@$(CS):cs/cs378/github/c++/graph/
+config:
+	git config -l
 
 test: TestGraph.out
 
-versions:
-	uname -a
-	@echo
-	printenv
-	@echo
-	which $(CXX)
-	@echo hi
-	$(CXX) $(CXXVER)
-	@echo hi
-	$(GTESTVER)
-	@echo
-	which $(GCOV)
-	@echo
-	$(GCOV) $(GCOVVER)
-	@echo
-	grep "#define BOOST_VERSION " $(BOOST)/version.hpp
-ifdef VALGRIND
-	@echo
-	which $(VALGRIND)
-	@echo
-	$(VALGRIND) --version
-endif
-	@echo
-	which doxygen
-	@echo
-	doxygen --version
+Graph-tests:
+	git clone https://github.com/cs378-summer-2015/graph-tests.git
+
+html: Doxyfile Graph.h TestGraph.c++
+	doxygen Doxyfile
+
+Graph.log:
+	git log > Graph.log
+
+Doxyfile:
+	doxygen -g
 
 TestGraph: Graph.h TestGraph.c++
-	$(CXX) $(GCOVFLAGS) $(CXXFLAGS) TestGraph.c++ -o TestGraph $(LDFLAGS)
+	$(CXX) $(COVFLAGS) $(CXXFLAGS) TestGraph.c++ -o TestGraph $(LDFLAGS)
 
 TestGraph.out: TestGraph
 	$(VALGRIND) ./TestGraph  >  TestGraph.out 2>&1
 	$(GCOV) -b TestGraph.c++ >> TestGraph.out
 	cat TestGraph.out
+
+sts768: Graph-tests TestGraph.out
+	cp TestGraph.c++ Graph-tests/sts768-TestGraph.c++
+	cp TestGraph.out Graph-tests/sts768-TestGraph.out
