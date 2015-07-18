@@ -21,6 +21,8 @@
 // Graph
 // -----
 
+using namespace std;
+
 class Graph {
     public:
         // --------
@@ -52,7 +54,8 @@ class Graph {
          */
         friend std::pair<edge_descriptor, bool> add_edge (vertex_descriptor u, vertex_descriptor v, Graph& graph) {
             // <your code>
-            if(u >= graph.vertex_index || v >= graph.vertex_index){
+            if(u > graph.vertex_index || v > graph.vertex_index){
+                //cout << "makeing more vertices" << endl;
                 //increase size of v_list.
                 for(int i = graph.vertex_index; i < (std::max(u, v) + 1); ++i)
                     add_vertex(graph);
@@ -60,13 +63,15 @@ class Graph {
             
             //store new association in vector container.
             if(graph.v_list.at(u).insert(v).second){
+                //cout << "seems we need to add the edge" << endl;
                 //store new association in edge container.
                 std::vector<vertex_descriptor> e = {u, v};
                 graph.e_list.push_back(e);
-
+                ++graph.e_size;                
                 return std::make_pair(++graph.edge_index, true);
             }
             //otherwise, get information from e_list
+            //cout << "edge all ready exists apparently" << endl;
             return std::make_pair(edge(u, v, graph).first, false);
         }
 
@@ -110,11 +115,19 @@ class Graph {
         friend std::pair<edge_descriptor, bool> edge (vertex_descriptor u, vertex_descriptor v, const Graph& graph) {
             // <your code>
 
-            for(vector<vertex_descriptor> v : graph)
-
-            edge_descriptor ed = 0;
-            bool            b  = true;
-            return std::make_pair(ed, b);}
+            for(edges_size_type i = 0; i < graph.e_size; ++i){
+                std::vector<vertex_descriptor> vec = graph.e_list.at((int)i);
+                assert(vec.size() == 2);
+                //cout << "in edge: i: " << i << endl;
+                if(vec.at(0) == u && vec.at(1) == v){
+                    //cout << "in edge: found the right edge" << endl;
+                    return std::make_pair(edge_descriptor(i), true);
+                }
+            }
+            //otherwise, the edge does not exist.
+            //cout << "in edge: did not find the right edge discriptor" << endl;
+            return std::make_pair(edge_descriptor(-1), false);
+        }
 
         // -----
         // edges

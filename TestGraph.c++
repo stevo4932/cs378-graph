@@ -229,9 +229,61 @@ TYPED_TEST(TestGraph, test_num_vertices_5) {
 }
 
 
-// // ----
-// // edge
-// // ----
+// ----
+// edge
+// ----
+
+TYPED_TEST(TestGraph, test_edge_1) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+
+    pair<edge_descriptor, bool> p = edge(vdA, vdB, g);
+    ASSERT_FALSE(p.second);
+
+}
+
+// --------
+// add_edge
+// --------
+
+TYPED_TEST(TestGraph, test_add_edge_1) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+
+    ASSERT_TRUE(p1.second);
+
+    pair<edge_descriptor, bool> p2 = edge(vdA, vdB, g);
+    ASSERT_TRUE(p2.second);
+    ASSERT_EQ(p1.first, p2.first);
+
+
+
+}
+
 
 // TYPED_TEST(TestGraph, test_edge) {
 //     typedef typename TestFixture::graph_type         graph_type;
