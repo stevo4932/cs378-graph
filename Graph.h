@@ -57,7 +57,7 @@ class Graph {
             if(u > graph.vertex_index || v > graph.vertex_index){
                 //cout << "makeing more vertices" << endl;
                 //increase size of v_list.
-                for(int i = graph.vertex_index; i < (std::max(u, v) + 1); ++i)
+                for(int i = graph.vertex_index; i < (std::max(u, v)); ++i)
                     add_vertex(graph);
             }
             
@@ -117,19 +117,15 @@ class Graph {
          * If there are no edges between u and v, return a pair with an arbitrary edge descriptor and false.
          */
         friend std::pair<edge_descriptor, bool> edge (vertex_descriptor u, vertex_descriptor v, const Graph& graph) {
-            // <your code>
-
+            // trys to find the matching edge.
             for(edges_size_type i = 0; i < graph.e_size; ++i){
                 std::vector<vertex_descriptor> vec = graph.e_list.at((int)i);
                 assert(vec.size() == 2);
-                //cout << "in edge: i: " << i << endl;
                 if(vec.at(0) == u && vec.at(1) == v){
-                    //cout << "in edge: found the right edge" << endl;
                     return std::make_pair(edge_descriptor(i), true);
                 }
             }
             //otherwise, the edge does not exist.
-            //cout << "in edge: did not find the right edge discriptor" << endl;
             return std::make_pair(edge_descriptor(-1), false);
         }
 
@@ -158,8 +154,7 @@ class Graph {
          */
         friend edges_size_type num_edges (const Graph& graph) {
             // <your code>
-            edges_size_type e = 1; // fix
-            return e;
+            return graph.e_size;
         }
 
         // ------------
@@ -179,24 +174,30 @@ class Graph {
         // ------
 
         /**
-         * The start point is returned
+         * @param ed an edge descriptor
+         * @param graph a graph instance
+         * @return the starting vertex of the given edge descriptor.
          */
-        friend vertex_descriptor source (edge_descriptor, const Graph&) {
-            // <your code>
-            vertex_descriptor v = 0; // fix
-            return v;}
+        friend vertex_descriptor source (edge_descriptor ed, const Graph& graph) {
+            if(ed > graph.edge_index && ed < 0)
+                return vertex_descriptor(-1);
+            return graph.e_list.at(ed).at(0);
+        }
 
         // ------
         // target
         // ------
 
         /**
-         * returns the end point of a line
+         * @param ed an edge descriptor
+         * @param graph a graph instance
+         * @return the end vertex of the given edge descriptor.
          */
-        friend vertex_descriptor target (edge_descriptor, const Graph&) {
-            // <your code>
-            vertex_descriptor v = 0; // fix
-            return v;}
+        friend vertex_descriptor target (edge_descriptor ed, const Graph& graph) {
+            if(ed > graph.edge_index && ed < 0)
+                return vertex_descriptor(-1);
+            return graph.e_list.at(ed).at(1);
+        }
 
         // ------
         // vertex
@@ -240,8 +241,8 @@ class Graph {
         vertex_descriptor vertex_index; //vertex index
         edge_descriptor edge_index; //edge index
 
-        vertices_size_type v_size;
-        edges_size_type e_size;
+        vertices_size_type v_size; // vertex size
+        edges_size_type e_size; // edge size
         // -----
         // valid
         // -----
@@ -250,7 +251,6 @@ class Graph {
          * <your documentation>
          */
         bool valid () const {
-            // <your code>
             return true;}
 
     public:

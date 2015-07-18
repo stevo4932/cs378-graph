@@ -76,7 +76,8 @@ TYPED_TEST(TestGraph, test_vertex_1) {
     ASSERT_EQ(vdA, vd);
 
     vertices_size_type vs = num_vertices(g);
-    ASSERT_EQ(1, vs);}
+    ASSERT_EQ(1, vs);
+}
 
 TYPED_TEST(TestGraph, test_vertex_2) {
     typedef typename TestFixture::graph_type         graph_type;
@@ -92,11 +93,12 @@ TYPED_TEST(TestGraph, test_vertex_2) {
 
     vertex_descriptor vdA = add_vertex(g);
 
-    vertex_descriptor vd = vertex(1, g);
-    ASSERT_NE(vdA, vd);
+    vertex_descriptor vdB = vertex(1, g);
+    ASSERT_NE(vdA, vdB);
 
     vertices_size_type vs = num_vertices(g);
-    ASSERT_EQ(1, vs);}
+    ASSERT_EQ(1, vs);
+}
 
 TYPED_TEST(TestGraph, test_vertex_3) {
     typedef typename TestFixture::graph_type         graph_type;
@@ -122,7 +124,8 @@ TYPED_TEST(TestGraph, test_vertex_3) {
     ASSERT_EQ(vdB, vd2);
 
     vertices_size_type vs = num_vertices(g);
-    ASSERT_EQ(2, vs);}
+    ASSERT_EQ(2, vs);
+}
 
 // ------------
 // num_vertices
@@ -247,10 +250,69 @@ TYPED_TEST(TestGraph, test_edge_1) {
 
     vertex_descriptor vdA = add_vertex(g);
     vertex_descriptor vdB = add_vertex(g);
+    ASSERT_NE(vdA, vdB);
 
-    pair<edge_descriptor, bool> p = edge(vdA, vdB, g);
-    ASSERT_FALSE(p.second);
+    //Failure Case
+    pair<edge_descriptor, bool> p2 = edge(vdA, vdB, g);
+    ASSERT_FALSE(p2.second);
 
+    vertices_size_type vs = num_vertices(g);
+    ASSERT_EQ(2, vs);
+}
+
+TYPED_TEST(TestGraph, test_edge_2) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+    
+    //normal case.
+    pair<edge_descriptor, bool> p2 = edge(vdA, vdB, g);
+    ASSERT_TRUE(p2.second);
+    ASSERT_EQ(p1.first, p2.first);
+
+    vertices_size_type vs = num_vertices(g);
+    ASSERT_EQ(2, vs);
+}
+
+TYPED_TEST(TestGraph, test_edge_3) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+    
+    //normal case.
+    pair<edge_descriptor, bool> p2 = edge(vdA, vdB, g);
+    ASSERT_TRUE(p2.second);
+    ASSERT_EQ(p1.first, p2.first);
+    
+    vertex_descriptor vdC = add_vertex(g);
+    vertex_descriptor vdD = add_vertex(g);
+    //failure case
+    p2 = edge(vdC, vdD, g);
+    ASSERT_FALSE(p2.second);
 }
 
 // --------
@@ -282,6 +344,374 @@ TYPED_TEST(TestGraph, test_add_edge_1) {
 
 
 
+}
+
+TYPED_TEST(TestGraph, test_add_edge_2) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    //add an edge between two unitialized vertices.
+    vertex_descriptor vdA = 0;
+    vertex_descriptor vdB = 1;
+
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+
+    pair<edge_descriptor, bool> p2 = edge(vdA, vdB, g);
+    ASSERT_TRUE(p2.second);
+    
+    ASSERT_EQ(p1.first, p2.first);
+    ASSERT_EQ(2, num_vertices(g));
+}
+
+TYPED_TEST(TestGraph, test_add_edge_3) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+
+    //add an edge between two out of range vertices.
+    vertex_descriptor vd1 = 10;
+    vertex_descriptor vd2 = 11;
+    p1 = add_edge(vd1, vd2, g);
+    ASSERT_TRUE(p1.second);
+
+    pair<edge_descriptor, bool> p2 = edge(vd1, vd2, g);
+    ASSERT_TRUE(p2.second);
+    
+    ASSERT_EQ(p2.first, p1.first);
+    ASSERT_EQ(12, num_vertices(g));
+}
+
+TYPED_TEST(TestGraph, test_add_edge_4) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+
+    //add the same edge twice.
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    pair<edge_descriptor, bool> p2 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+    ASSERT_FALSE(p2.second);
+    ASSERT_EQ(p1.first, p2.first);
+
+}
+
+// ---------
+// num_edges
+// ---------
+
+TYPED_TEST(TestGraph, test_num_edges_1) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    //add an edge between two unitialized vertices.
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    ASSERT_EQ(2, num_vertices(g));
+
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+
+    pair<edge_descriptor, bool> p2 = edge(vdA, vdB, g);
+    ASSERT_TRUE(p2.second);
+    
+    ASSERT_EQ(p1.first, p2.first);
+    ASSERT_EQ(1, num_edges(g));
+}
+
+TYPED_TEST(TestGraph, test_num_edges_2) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    //add an edge between two unitialized vertices.
+    vertex_descriptor vdA = 0;
+    vertex_descriptor vdB = 1;
+
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+
+    pair<edge_descriptor, bool> p2 = edge(vdA, vdB, g);
+    ASSERT_TRUE(p2.second);
+    
+    ASSERT_EQ(p1.first, p2.first);
+    ASSERT_EQ(1, num_edges(g));
+}
+
+TYPED_TEST(TestGraph, test_num_edges_3) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    //try to add two edges that are the same.
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    ASSERT_EQ(2, num_vertices(g));
+
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+
+    pair<edge_descriptor, bool> p2 = add_edge(vdA, vdB, g);
+    ASSERT_FALSE(p2.second);
+
+    pair<edge_descriptor, bool> p3 = edge(vdA, vdB, g);
+    ASSERT_TRUE(p3.second);
+    
+    ASSERT_EQ(p3.first, p2.first);
+    ASSERT_EQ(p3.first, p1.first);
+    ASSERT_EQ(1, num_edges(g));
+}
+
+TYPED_TEST(TestGraph, test_num_edges_4) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    //add multiple edges.
+    vertex_descriptor vdA;
+    vertex_descriptor vdB;
+
+    for(int i = 0; i < 10; ++i){
+        vdA = add_vertex(g);
+        vdB = add_vertex(g);
+        ASSERT_TRUE(add_edge(vdA, vdB, g).second);
+    }
+
+    ASSERT_EQ(10, num_edges(g));
+}
+
+// ------
+// source
+// ------
+
+TYPED_TEST(TestGraph, test_source_1) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    ASSERT_EQ(2, num_vertices(g));
+    
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+    ASSERT_EQ(1, num_edges(g));
+
+    vertex_descriptor vdC = source(p1.first, g);
+    ASSERT_EQ(vdA, vdC);    
+}
+
+TYPED_TEST(TestGraph, test_source_2) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    ASSERT_EQ(2, num_vertices(g));
+    
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    pair<edge_descriptor, bool> p2 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+    ASSERT_FALSE(p2.second);
+    ASSERT_EQ(1, num_edges(g));
+
+    vertex_descriptor vdC = source(p1.first, g);
+    ASSERT_EQ(vdA, vdC);
+    vertex_descriptor vdD = source(p2.first, g);
+    ASSERT_EQ(vdA, vdD);
+}
+
+TYPED_TEST(TestGraph, test_source_3) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    vertex_descriptor vdC = add_vertex(g);
+    vertex_descriptor vdD = add_vertex(g);
+    ASSERT_EQ(4, num_vertices(g));
+    
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    pair<edge_descriptor, bool> p2 = add_edge(vdC, vdD, g);
+    ASSERT_TRUE(p1.second);
+    ASSERT_TRUE(p2.second);
+    ASSERT_EQ(2, num_edges(g));
+
+    vertex_descriptor vdE = source(p1.first, g);
+    ASSERT_EQ(vdA, vdE);
+    vertex_descriptor vdF = source(p2.first, g);
+    ASSERT_EQ(vdC, vdF);
+    ASSERT_NE(vdE, vdF);
+}
+
+// ------
+// target
+// ------
+
+TYPED_TEST(TestGraph, test_target_1) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    ASSERT_EQ(2, num_vertices(g));
+    
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+    ASSERT_EQ(1, num_edges(g));
+
+    vertex_descriptor vdC = target(p1.first, g);
+    ASSERT_EQ(vdB, vdC);    
+}
+
+TYPED_TEST(TestGraph, test_target_2) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    ASSERT_EQ(2, num_vertices(g));
+    
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    pair<edge_descriptor, bool> p2 = add_edge(vdA, vdB, g);
+    ASSERT_TRUE(p1.second);
+    ASSERT_FALSE(p2.second);
+    ASSERT_EQ(1, num_edges(g));
+
+    vertex_descriptor vdC = target(p1.first, g);
+    ASSERT_EQ(vdB, vdC);
+    vertex_descriptor vdD = target(p2.first, g);
+    ASSERT_EQ(vdB, vdD);
+}
+
+TYPED_TEST(TestGraph, test_target_3) {
+    typedef typename TestFixture::graph_type         graph_type;
+    typedef typename TestFixture::vertex_descriptor  vertex_descriptor;
+    typedef typename TestFixture::edge_descriptor    edge_descriptor;
+    typedef typename TestFixture::vertex_iterator    vertex_iterator;
+    typedef typename TestFixture::edge_iterator      edge_iterator;
+    typedef typename TestFixture::adjacency_iterator adjacency_iterator;
+    typedef typename TestFixture::vertices_size_type vertices_size_type;
+    typedef typename TestFixture::edges_size_type    edges_size_type;
+
+    graph_type g;
+
+    vertex_descriptor vdA = add_vertex(g);
+    vertex_descriptor vdB = add_vertex(g);
+    vertex_descriptor vdC = add_vertex(g);
+    vertex_descriptor vdD = add_vertex(g);
+    ASSERT_EQ(4, num_vertices(g));
+    
+    pair<edge_descriptor, bool> p1 = add_edge(vdA, vdB, g);
+    pair<edge_descriptor, bool> p2 = add_edge(vdC, vdD, g);
+    ASSERT_TRUE(p1.second);
+    ASSERT_TRUE(p2.second);
+    ASSERT_EQ(2, num_edges(g));
+
+    vertex_descriptor vdE = target(p1.first, g);
+    ASSERT_EQ(vdB, vdE);
+    vertex_descriptor vdF = target(p2.first, g);
+    ASSERT_EQ(vdD, vdF);
+    ASSERT_NE(vdE, vdF);
 }
 
 
