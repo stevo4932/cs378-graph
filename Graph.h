@@ -109,6 +109,10 @@ class Graph {
         // ----
 
         /**
+         * @param u a vertex descriptor of source edge.
+         * @param v a vertex descriptor of target edge.
+         * @param graph the graph to insert the edge into.
+         * @return a pair contining an edge descriptor and a success boolean.
          * If an edge from vertex u to vertex v exists, return a pair containing one such edge and true. 
          * If there are no edges between u and v, return a pair with an arbitrary edge descriptor and false.
          */
