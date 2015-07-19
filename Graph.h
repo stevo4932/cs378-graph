@@ -34,7 +34,7 @@ class Graph {
 
         typedef vector<vertex_descriptor>::iterator vertex_iterator;    // fix!
         typedef vector<edge_descriptor>::iterator edge_iterator;      // fix!
-        typedef vertex_descriptor* adjacency_iterator; // fix!
+        typedef set<vertex_descriptor>::iterator adjacency_iterator; // fix!
 
         typedef std::size_t vertices_size_type;
         typedef std::size_t edges_size_type;
@@ -91,14 +91,19 @@ class Graph {
         // -----------------
 
         /**
-         * returns a pair of iterators that refer to the points a point connects to.
+         * @param vd vertex descriptor
+         * @param graph the graph instance
+         * @return two iterators of type adjacency_iterator, 
+         * which refer to the beginning and ending vertices in the adjacency list.
          */
-        friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor, const Graph&) {
-            // <your code>
-            static int a [] = {0, 0};     // dummy data
-            adjacency_iterator b = a;
-            adjacency_iterator e = a + 2;
-            return std::make_pair(b, e);}
+        friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor vd, const Graph& graph) {
+            
+            set<vertex_descriptor> av = graph.v_list.at(vd);
+            if(av.size() == 0){ //special case due to boost iterator using an array and not vector
+                return std::make_pair(av.begin(), av.begin());
+            }
+            return std::make_pair(av.begin(), av.end());
+        }
 
         // ----
         // edge
