@@ -218,12 +218,17 @@ class Graph {
          * which refer to the beginning and ending vertices.
          */
         friend std::pair<vertex_iterator, vertex_iterator> vertices (const Graph& graph) {
-            
+
             static vector<vertex_descriptor> va(graph.v_size);
             for(int i = 0; i < graph.v_size; ++i)
                  va[i] = i;
+            
+            if(graph.v_size == 0){ //special case due to boost using an array and not vector
+                return std::make_pair(va.begin(), va.begin());
+            }
 
-            return std::make_pair(va.begin(), va.end());}
+            return std::make_pair(va.begin(), va.end());
+        }
 
     private:
         // ----
