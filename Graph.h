@@ -33,7 +33,7 @@ class Graph {
         typedef int edge_descriptor;    // fix!
 
         typedef vector<vertex_descriptor>::iterator vertex_iterator;    // fix!
-        typedef edge_descriptor* edge_iterator;      // fix!
+        typedef vector<edge_descriptor>::iterator edge_iterator;      // fix!
         typedef vertex_descriptor* adjacency_iterator; // fix!
 
         typedef std::size_t vertices_size_type;
@@ -130,15 +130,22 @@ class Graph {
         // -----
 
         /**
-         * Provides access to all lines (or edges) in a graph
-         * returns two iterators that point to the first and last line (or edge)
+         * @param graph the graph instance
+         * @return two iterators of type edge_iterator, 
+         * which refer to the beginning and ending edges in the graph.
          */
-        friend std::pair<edge_iterator, edge_iterator> edges (const Graph&) {
-            // <your code>
-            static int a [] = {0, 0};     // dummy data
-            edge_iterator b = a;
-            edge_iterator e = a + 2;
-            return std::make_pair(b, e);}
+        friend std::pair<edge_iterator, edge_iterator> edges (const Graph& graph) {
+            
+            static vector<edge_descriptor> ea(graph.e_size);
+            for(int i = 0; i < graph.e_size; ++i)
+                 ea[i] = edge_descriptor(i);
+            
+            if(graph.e_size == 0){ //special case due to boost iterator using an array and not vector
+                return std::make_pair(ea.begin(), ea.begin());
+            }
+
+            return std::make_pair(ea.begin(), ea.end());
+        }
 
         // ---------
         // num_edges
