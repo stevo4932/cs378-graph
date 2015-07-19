@@ -32,9 +32,9 @@ class Graph {
         typedef int vertex_descriptor;  // fix! // an index for a vertex in the graph. 
         typedef int edge_descriptor;    // fix!
 
-        typedef int* vertex_iterator;    // fix!
-        typedef int* edge_iterator;      // fix!
-        typedef int* adjacency_iterator; // fix!
+        typedef vector<vertex_descriptor>::iterator vertex_iterator;    // fix!
+        typedef edge_descriptor* edge_iterator;      // fix!
+        typedef vertex_descriptor* adjacency_iterator; // fix!
 
         typedef std::size_t vertices_size_type;
         typedef std::size_t edges_size_type;
@@ -53,9 +53,7 @@ class Graph {
          * NOTE: adds missing vertices to the graph automatically if the vertices don’t exist. 
          */
         friend std::pair<edge_descriptor, bool> add_edge (vertex_descriptor u, vertex_descriptor v, Graph& graph) {
-            // <your code>
             if(u > graph.vertex_index || v > graph.vertex_index){
-                //cout << "makeing more vertices" << endl;
                 //increase size of v_list.
                 for(int i = graph.vertex_index; i < (std::max(u, v)); ++i)
                     add_vertex(graph);
@@ -63,7 +61,6 @@ class Graph {
             
             //store new association in vector container.
             if(graph.v_list.at(u).insert(v).second){
-                //cout << "seems we need to add the edge" << endl;
                 //store new association in edge container.
                 std::vector<vertex_descriptor> e = {u, v};
                 graph.e_list.push_back(e);
@@ -71,7 +68,6 @@ class Graph {
                 return std::make_pair(++graph.edge_index, true);
             }
             //otherwise, get information from e_list
-            //cout << "edge all ready exists apparently" << endl;
             return std::make_pair(edge(u, v, graph).first, false);
         }
 
@@ -153,7 +149,6 @@ class Graph {
          * @return the number of edges in the given graph.
          */
         friend edges_size_type num_edges (const Graph& graph) {
-            // <your code>
             return graph.e_size;
         }
 
@@ -166,7 +161,6 @@ class Graph {
          * @return the number of vertices in the given graph.
          */
         friend vertices_size_type num_vertices (const Graph& graph) {
-            // <your code>
             return graph.v_size;
         }
         // ------
@@ -219,16 +213,17 @@ class Graph {
         // --------
 
         /**
-         * get all points from a graph
-         * This function returns two iterators of type 
-         * vertex_iterator, which refer to the beginning and ending points.
+         * @param graph the graph instance
+         * @return two iterators of type vertex_iterator, 
+         * which refer to the beginning and ending vertices.
          */
-        friend std::pair<vertex_iterator, vertex_iterator> vertices (const Graph&) {
-            // <your code>
-            static int a [] = {0, 0};     // dummy data
-            vertex_iterator b = a;
-            vertex_iterator e = a + 2;
-            return std::make_pair(b, e);}
+        friend std::pair<vertex_iterator, vertex_iterator> vertices (const Graph& graph) {
+            
+            static vector<vertex_descriptor> va(graph.v_size);
+            for(int i = 0; i < graph.v_size; ++i)
+                 va[i] = i;
+
+            return std::make_pair(va.begin(), va.end());}
 
     private:
         // ----
@@ -261,7 +256,7 @@ class Graph {
         /**
          * Creates an empty Graph instance
          */
-        Graph () :            // <your code>
+        Graph () :    
                 v_list(0), 
                 e_list(0) {
                 vertex_index = edge_index = -1;
