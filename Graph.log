@@ -1,0 +1,95 @@
+commit bc5ef75b5ddc6c0e5ab2df4a5d5ddb65cc17a3c8
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Tue Jul 21 14:34:53 2015 -0500
+
+    updated travis
+
+commit d841cb6b154be3d49435ce3fcc13dd65a056f625
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Tue Jul 21 14:28:00 2015 -0500
+
+    fixed #10
+
+commit f109190f64dd637ba4dd220d3945c2501b6b93f3
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Sat Jul 18 22:05:30 2015 -0500
+
+    close #9
+
+commit ea1216accabd5ced9abd421f1cef3d8f0592fa18
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Sat Jul 18 21:39:14 2015 -0500
+
+    close #8
+
+commit 8322b0e1739cc44442fc847f212f2d37ed23f299
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Sat Jul 18 21:17:51 2015 -0500
+
+    close #7, implemented vertices
+
+commit 28484e9d88dc781e342b7230cffda8cd6c34fbb0
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Sat Jul 18 20:59:15 2015 -0500
+
+    fixed #6
+
+commit b6e277bd170670f463ac2497e18a30b775c903f5
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Sat Jul 18 15:00:24 2015 -0500
+
+    fixed #3 close #5 close #4
+
+commit 8f237d331d5032e05da0acf2bf4508a02079ccff
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Sat Jul 18 00:56:16 2015 -0500
+
+    updated edge description
+
+commit 52335ae653a046ac6d20135a31d5f4221cac2698
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Sat Jul 18 00:52:44 2015 -0500
+
+    fixed #2 close #1, add_edge and edge done
+
+commit 59bf1a14002a411f8cd3aa9fa60614145217e0e4
+Author: Scott Stephens <stevo4932@utexas.edu>
+Date:   Sat Jul 18 00:18:33 2015 -0500
+
+    implemented add_edge and add_vector
+
+commit b03a5c5e12623d0fc27c65d352b243ee6079e78b
+Author: Scott Stephens <stevo4932@gmail.com>
+Date:   Thu Jul 16 23:39:45 2015 -0500
+
+    removed old deque commands from travis
+
+commit 3504fb8b7da9b1b8517a99c70c8df34ae6a5eb53
+Author: Scott Stephens <stevo4932@gmail.com>
+Date:   Thu Jul 16 23:33:41 2015 -0500
+
+    updated make and travis for robustness
+
+commit f00784e90fe57257df1f3d63826764abeaa1e8e6
+Author: Scott Stephens <stevo4932@gmail.com>
+Date:   Thu Jul 16 23:23:25 2015 -0500
+
+    added basic make and travis
+
+commit 8e5c1cc9051341cc36856655a5d5c89a5fe44c24
+Author: Scott Stephens <stevo4932@gmail.com>
+Date:   Thu Jul 16 23:15:30 2015 -0500
+
+    adding base files
+
+commit 3cc5397ba637f6449961fa1ca291e8673d71bd70
+Author: Scott Stephens <stevo4932@gmail.com>
+Date:   Thu Jul 16 23:12:16 2015 -0500
+
+    removed readme
+
+commit 1870b755365ceed95147aeb955c78992f58a2387
+Author: stevo4932 <stevo4932@utexas.edu>
+Date:   Thu Jul 16 23:10:32 2015 -0500
+
+    Initial commit
