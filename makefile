@@ -2,7 +2,7 @@ FILES :=                              \
     .gitignore                        \
     .travis.yml                       \
     graph-tests/sts768-TestGraph.c++ \
-    gsraph-tests/sts768-TestGraph.out \
+    graph-tests/sts768-TestGraph.out \
     Graph.h                         \
     Graph.log                       \
     html                            \
@@ -62,6 +62,6 @@ TestGraph.out: TestGraph
 	$(GCOV) -b TestGraph.c++ >> TestGraph.out
 	cat TestGraph.out
 
-sts768: Graph-tests TestGraph.out
+sts768: graph-tests TestGraph.out TestGraph.c++
 	cp TestGraph.c++ graph-tests/sts768-TestGraph.c++
 	cp TestGraph.out graph-tests/sts768-TestGraph.out
