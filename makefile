@@ -1,8 +1,8 @@
 FILES :=                              \
     .gitignore                        \
     .travis.yml                       \
-    Graph-tests/sts768-TestGraph.c++ \
-    Graph-tests/sts768-TestGraph.out \
+    graph-tests/sts768-TestGraph.c++ \
+    gsraph-tests/sts768-TestGraph.out \
     Graph.h                         \
     Graph.log                       \
     html                            \
@@ -42,7 +42,7 @@ config:
 
 test: TestGraph.out
 
-Graph-tests:
+graph-tests:
 	git clone https://github.com/cs378-summer-2015/graph-tests.git
 
 html: Doxyfile Graph.h TestGraph.c++
@@ -63,5 +63,5 @@ TestGraph.out: TestGraph
 	cat TestGraph.out
 
 sts768: Graph-tests TestGraph.out
-	cp TestGraph.c++ Graph-tests/sts768-TestGraph.c++
-	cp TestGraph.out Graph-tests/sts768-TestGraph.out
+	cp TestGraph.c++ graph-tests/sts768-TestGraph.c++
+	cp TestGraph.out graph-tests/sts768-TestGraph.out

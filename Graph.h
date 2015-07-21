@@ -32,9 +32,9 @@ class Graph {
         typedef int vertex_descriptor;  // fix! // an index for a vertex in the graph. 
         typedef int edge_descriptor;    // fix!
 
-        typedef vector<vertex_descriptor>::iterator vertex_iterator;    // fix!
-        typedef vector<edge_descriptor>::iterator edge_iterator;      // fix!
-        typedef set<vertex_descriptor>::iterator adjacency_iterator; // fix!
+        typedef vector<vertex_descriptor>::const_iterator vertex_iterator;    // fix!
+        typedef vector<edge_descriptor>::const_iterator edge_iterator;      // fix!
+        typedef set<vertex_descriptor>::const_iterator adjacency_iterator; // fix!
 
         typedef std::size_t vertices_size_type;
         typedef std::size_t edges_size_type;
@@ -97,12 +97,13 @@ class Graph {
          * which refer to the beginning and ending vertices in the adjacency list.
          */
         friend std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices (vertex_descriptor vd, const Graph& graph) {
-            
-            set<vertex_descriptor> av = graph.v_list.at(vd);
-            if(av.size() == 0){ //special case due to boost iterator using an array and not vector
-                return std::make_pair(av.begin(), av.begin());
+
+            if(graph.v_list[vd].size() == 0){ //special case due to boost iterator using an array and not vector
+                return std::make_pair(graph.v_list[vd].begin(), graph.v_list[vd].begin());
             }
-            return std::make_pair(av.begin(), av.end());
+            adjacency_iterator b = graph.v_list[vd].begin();
+            adjacency_iterator e = graph.v_list[vd].end();
+            return std::make_pair(b, e);
         }
 
         // ----
@@ -142,7 +143,7 @@ class Graph {
         friend std::pair<edge_iterator, edge_iterator> edges (const Graph& graph) {
             
             static vector<edge_descriptor> ea(graph.e_size);
-            for(int i = 0; i < graph.e_size; ++i)
+            for(size_t i = 0; i < graph.e_size; ++i)
                  ea[i] = edge_descriptor(i);
             
             if(graph.e_size == 0){ //special case due to boost iterator using an array and not vector
@@ -232,7 +233,7 @@ class Graph {
         friend std::pair<vertex_iterator, vertex_iterator> vertices (const Graph& graph) {
 
             static vector<vertex_descriptor> va(graph.v_size);
-            for(int i = 0; i < graph.v_size; ++i)
+            for(size_t i = 0; i < graph.v_size; ++i)
                  va[i] = i;
             
             if(graph.v_size == 0){ //special case due to boost using an array and not vector
